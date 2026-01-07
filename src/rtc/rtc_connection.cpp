@@ -122,6 +122,8 @@ void RTCConnection::CreateOffer(OnCreateSuccessFunc on_success,
   RTCDataManager* data_manager = observer_->DataManager();
   if (data_manager != nullptr) {
     webrtc::DataChannelInit config;
+    config.ordered = true;
+    config.protocol = "janus-protocol";
     auto result = connection_->CreateDataChannelOrError("serial", &config);
     if (!result.ok()) {
       RTC_LOG(LS_ERROR) << "CreateDataChannel() failed: "

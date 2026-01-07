@@ -61,6 +61,12 @@ Websocket::Websocket(Websocket::ssl_tag,
 }
 Websocket::Websocket(boost::asio::ip::tcp::socket socket)
     : ws_(new websocket_t(std::move(socket))), strand_(ws_->get_executor()) {
+  //Set subprotocol for janus-gateway
+  ws_->set_option(boost::beast::websocket::stream_base::decorator(
+      [](boost::beast::websocket::request_type& req) {
+        req.set(boost::beast::http::field::sec_websocket_protocol,
+                "janus-protocol");
+      }));
   ws_->write_buffer_bytes(8192);
 }
 Websocket::Websocket(https_proxy_tag,
